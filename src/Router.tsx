@@ -6,6 +6,8 @@ import Home from './screens/Home';
 import Details from './screens/Details';
 import { RecoilRoot } from 'recoil';
 import Favorites from './screens/Favorites';
+import { ApolloProvider } from '@apollo/client';
+import client from './api/service';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,13 +24,15 @@ function MyTabs() {
 
 export default function Router() {
 	return (
-		<RecoilRoot>
-			<NavigationContainer>
-				<Stack.Navigator screenOptions={{ headerShown: false }}>
-					<Stack.Screen name="HomeTab" component={MyTabs} />
-					<Stack.Screen name="Details" component={Details} />
-				</Stack.Navigator>
-			</NavigationContainer>
-		</RecoilRoot>
+		<ApolloProvider client={client}>
+			<RecoilRoot>
+				<NavigationContainer>
+					<Stack.Navigator screenOptions={{ headerShown: false }}>
+						<Stack.Screen name="HomeTab" component={MyTabs} />
+						<Stack.Screen name="Details" component={Details} />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</RecoilRoot>
+		</ApolloProvider>
 	);
 }

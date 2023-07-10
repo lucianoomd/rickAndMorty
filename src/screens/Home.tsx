@@ -10,47 +10,42 @@ import {
 	View,
 } from 'react-native';
 import { useRecoilState } from 'recoil';
-import { getCharacters } from '../api';
+import getCharacters from '../api';
 import { charactersState, errorState, loadingState } from '../store/atoms';
 import CharacterCard from '../components/CharacterCard';
 import { Character } from '../types';
 import portal from '../assets/portal.png';
+import { useQuery } from '@apollo/client';
 
 function Home(): JSX.Element {
 	const [characters, setCharacters] = useRecoilState(charactersState);
-	const [loading, setLoading] = useRecoilState(loadingState);
-	const [error, setError] = useRecoilState(errorState);
 	const [page, setPage] = useState(1);
+	const { loading, error, data } = useQuery(getCharacters, {
+		variables: { page },
+	});
 
 	async function getCharacterWithPage() {
-		if (page !== 0) {
-			try {
-				setLoading(true);
-				const result = await getCharacters(page);
-				let newCharacters: Character[] = [];
-				if (characters) {
-					newCharacters = newCharacters.concat(characters);
-				}
-
-				if (result && result.characters) {
-					newCharacters = newCharacters.concat(result.characters);
-				}
-				setPage(result.nextPage);
-				setCharacters(newCharacters);
-				setLoading(false);
-			} catch (error) {
-				setError(String(error));
-				setLoading(false);
+		try {
+			const result = data?.characters && data?.characters;
+			let newCharacters: Character[] = [];
+			if (characters) {
+				newCharacters = newCharacters.concat(characters);
 			}
+
+			if (result && result?.results) {
+				newCharacters = newCharacters.concat(result.results);
+			}
+			setCharacters(newCharacters);
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
 	useEffect(() => {
 		getCharacterWithPage();
-	}, []);
+	}, [data?.characters]);
 
 	function retry() {
-		setError('');
 		getCharacterWithPage();
 	}
 
@@ -59,7 +54,7 @@ function Home(): JSX.Element {
 			<ImageBackground style={styles.container} source={portal}>
 				<SafeAreaView style={styles.container}>
 					<View style={styles.errorContainer}>
-						<Text style={styles.errorText}>{error}</Text>
+						<Text style={styles.errorText}>{error?.message}</Text>
 						<Button title="Retry" onPress={retry} />
 					</View>
 				</SafeAreaView>
