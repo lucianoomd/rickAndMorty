@@ -1,12 +1,30 @@
-import axios from 'axios';
-import { CharactersApiReturn } from '../types';
+import { gql } from '@apollo/client';
 
-const baseAPI = 'https://rickandmortyapi.com/api';
+const getCharacters = gql`
+	query ($page: Int!) {
+		characters(page: $page) {
+			results {
+				id
+				name
+				status
+				species
+				type
+				gender
+				origin {
+					name
+				}
+				location {
+					name
+				}
+				image
+				episode {
+					id
+					name
+				}
+				created
+			}
+		}
+	}
+`;
 
-export const getCharacters = async (page: Number = 1): CharactersApiReturn => {
-	const result = await axios.get(`${baseAPI}/character?page=${page}`);
-	return {
-		characters: result.data.results,
-		nextPage: result.data.info.next ? result.data.info.next.split('=')[1] : 0,
-	};
-};
+export default getCharacters;
