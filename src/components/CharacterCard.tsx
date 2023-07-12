@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Character } from '../types';
-import { useRecoilState } from 'recoil';
-import { favoritesState } from '../store/atoms';
+import { favoritesAtom } from '../store/atoms';
+import { useAtom } from 'jotai';
 import { useIsFavorite } from '../hooks';
 
 type CharacterCardProps = {
@@ -11,7 +11,7 @@ type CharacterCardProps = {
 
 function CharacterCard({ character }: CharacterCardProps): JSX.Element {
 	const { name, image, species, origin } = character;
-	const [favorites, setFavorites] = useRecoilState(favoritesState);
+	const [favorites, setFavorites] = useAtom(favoritesAtom);
 	const isFavorite = useIsFavorite(character.id);
 
 	const removeFavorite = (): void => {

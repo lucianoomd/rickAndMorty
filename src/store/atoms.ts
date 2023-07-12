@@ -1,22 +1,6 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 import { Character } from '../types';
 
-export const charactersState = atom<Character[]>({
-	key: 'characters',
-	default: [],
-});
+export const charactersAtom = atom<Character[]>([]);
 
-export const loadingState = atom<Boolean>({
-	key: 'loading',
-	default: false,
-});
-
-export const errorState = atom<String>({
-	key: 'error',
-	default: '',
-});
-
-export const favoritesState = atom<Character[]>({
-	key: 'favorites',
-	default: [],
-});
+export const favoritesAtom = atom<Character[]>([]);

@@ -1,7 +1,7 @@
-import { useRecoilValue } from 'recoil';
-import { favoritesState } from '../store/atoms';
+import { favoritesAtom } from '../store/atoms';
+import { useAtom } from 'jotai';
 
 export function useIsFavorite(id: Number): Boolean {
-	const favorites = useRecoilValue(favoritesState);
+	const [favorites] = useAtom(favoritesAtom);
 	return favorites.some((item) => item.id === id);
 }
