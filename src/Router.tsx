@@ -4,10 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './screens/Home';
 import Details from './screens/Details';
-import { RecoilRoot } from 'recoil';
 import Favorites from './screens/Favorites';
 import { ApolloProvider } from '@apollo/client';
 import client from './api/service';
+import { Provider } from 'jotai';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,14 +25,14 @@ function MyTabs() {
 export default function Router() {
 	return (
 		<ApolloProvider client={client}>
-			<RecoilRoot>
+			<Provider>
 				<NavigationContainer>
 					<Stack.Navigator screenOptions={{ headerShown: false }}>
 						<Stack.Screen name="HomeTab" component={MyTabs} />
 						<Stack.Screen name="Details" component={Details} />
 					</Stack.Navigator>
 				</NavigationContainer>
-			</RecoilRoot>
+			</Provider>
 		</ApolloProvider>
 	);
 }

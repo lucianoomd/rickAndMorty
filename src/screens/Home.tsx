@@ -9,16 +9,16 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import { useRecoilState } from 'recoil';
 import getCharacters from '../api';
-import { charactersState, errorState, loadingState } from '../store/atoms';
+import { charactersAtom } from '../store/atoms';
 import CharacterCard from '../components/CharacterCard';
 import { Character } from '../types';
 import portal from '../assets/portal.png';
 import { useQuery } from '@apollo/client';
+import { useAtom } from 'jotai';
 
 function Home(): JSX.Element {
-	const [characters, setCharacters] = useRecoilState(charactersState);
+	const [characters, setCharacters] = useAtom(charactersAtom);
 	const [page, setPage] = useState(1);
 	const { loading, error, data } = useQuery(getCharacters, {
 		variables: { page },
@@ -49,6 +49,10 @@ function Home(): JSX.Element {
 		getCharacterWithPage();
 	}
 
+	function incrementPage() {
+		setPage(page + 1);
+	}
+
 	const renderError = () => {
 		return (
 			<ImageBackground style={styles.container} source={portal}>
@@ -75,7 +79,7 @@ function Home(): JSX.Element {
 						<CharacterCard character={item} key={`${item.created}${Math.random()}`} />
 					)}
 					onEndReachedThreshold={0.9}
-					onEndReached={getCharacterWithPage}
+					onEndReached={incrementPage}
 				/>
 				{loading ? (
 					<View style={styles.loaderContainer}>

@@ -1,18 +1,18 @@
 import React from 'react';
 import { FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { useRecoilValue } from 'recoil';
-import { favoritesState } from '../store/atoms';
+import { favoritesAtom } from '../store/atoms';
 import CharacterCard from '../components/CharacterCard';
 import portal from '../assets/portal.png';
+import { useAtom } from 'jotai';
 
 function Favorites(): JSX.Element {
-	const characters = useRecoilValue(favoritesState);
+	const [favorites] = useAtom(favoritesAtom);
 
 	return (
 		<ImageBackground style={styles.container} source={portal}>
 			<SafeAreaView style={styles.container}>
 				<FlatList
-					data={characters}
+					data={favorites}
 					renderItem={({ item }) => (
 						<CharacterCard character={item} key={`${item.name}${Math.random()}`} />
 					)}
